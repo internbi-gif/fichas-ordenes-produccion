@@ -1,0 +1,115 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<title>Fichas de Órdenes de Producción</title>
+
+<style>
+body {
+  font-family: Arial, sans-serif;
+  background: #f4f6f8;
+  margin: 20px;
+}
+
+.card {
+  background: white;
+  border: 1px solid #ccc;
+  border-radius: 8px;
+  margin-bottom: 20px;
+  padding: 15px;
+  box-shadow: 0 2px 5px #ccc;
+}
+
+.header {
+  font-size: 20px;
+  font-weight: bold;
+  margin-bottom: 12px;
+}
+
+.info {
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
+  gap: 8px;
+  margin-bottom: 15px;
+}
+
+.label {
+  font-size: 11px;
+  color: #777;
+}
+
+.value {
+  font-weight: bold;
+}
+
+table {
+  width: 100%;
+  border-collapse: collapse;
+}
+
+th, td {
+  border: 1px solid #ddd;
+  padding: 7px;
+  text-align: left;
+}
+
+th {
+  background: #eee;
+}
+</style>
+</head>
+
+<body>
+
+<div class="card">
+
+  <div class="header">
+    ORDEN DE PRODUCCIÓN: 4,236,875
+  </div>
+
+  <div class="info">
+    <div>
+      <div class="label">FOLIO</div>
+      <div class="value">OP-2026-001</div>
+    </div>
+
+    <div>
+      <div class="label">FECHA</div>
+      <div class="value">2026-01-15</div>
+    </div>
+
+    <div>
+      <div class="label">ESTATUS</div>
+      <div class="value">P</div>
+    </div>
+
+    <div>
+      <div class="label">CENTRO</div>
+      <div class="value">Centro 01</div>
+    </div>
+  </div>
+
+  <table>
+    <tr>
+      <th>ORIGEN</th>
+      <th>CENTRO</th>
+      <th>FECHA</th>
+    </tr>
+
+    <tr>
+      <td>Almacén Principal</td>
+      <td>Centro 01</td>
+      <td>2026-01-15</td>
+    </tr>
+
+    <tr>
+      <td>Almacén Materia Prima</td>
+      <td>Centro 01</td>
+      <td>2026-01-16</td>
+    </tr>
+  </table>
+
+</div>
+
+</body>
+</html>
