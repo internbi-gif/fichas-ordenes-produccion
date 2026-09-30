@@ -1,115 +1,611 @@
 <!DOCTYPE html>
 <html lang="es">
 <head>
-<meta charset="UTF-8">
-<title>Fichas de Órdenes de Producción</title>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Fichas de órdenes de producción</title>
 
-<style>
-body {
-  font-family: Arial, sans-serif;
-  background: #f4f6f8;
-  margin: 20px;
-}
+  <style>
+    * {
+      box-sizing: border-box;
+    }
 
-.card {
-  background: white;
-  border: 1px solid #ccc;
-  border-radius: 8px;
-  margin-bottom: 20px;
-  padding: 15px;
-  box-shadow: 0 2px 5px #ccc;
-}
+    body {
+      margin: 0;
+      padding: 24px;
+      background: #f3f5f4;
+      color: #243c35;
+      font-family: Arial, sans-serif;
+    }
 
-.header {
-  font-size: 20px;
-  font-weight: bold;
-  margin-bottom: 12px;
-}
+    main {
+      max-width: 1200px;
+      margin: auto;
+    }
 
-.info {
-  display: grid;
-  grid-template-columns: repeat(4, 1fr);
-  gap: 8px;
-  margin-bottom: 15px;
-}
+    h1 {
+      margin: 0 0 20px;
+      font-size: 26px;
+    }
 
-.label {
-  font-size: 11px;
-  color: #777;
-}
+    .herramientas {
+      display: flex;
+      flex-wrap: wrap;
+      align-items: center;
+      gap: 12px;
+      margin-bottom: 20px;
+    }
 
-.value {
-  font-weight: bold;
-}
+    input,
+    button {
+      padding: 10px;
+      border: 1px solid #ced9d3;
+      border-radius: 6px;
+      background: white;
+      font: inherit;
+    }
 
-table {
-  width: 100%;
-  border-collapse: collapse;
-}
+    #buscar {
+      flex: 1;
+      min-width: 240px;
+    }
 
-th, td {
-  border: 1px solid #ddd;
-  padding: 7px;
-  text-align: left;
-}
+    #contador {
+      margin-bottom: 18px;
+      color: #60756b;
+      font-size: 14px;
+    }
 
-th {
-  background: #eee;
-}
-</style>
+    /* Una ficha por orden, en una lista vertical. */
+    #fichas {
+      display: flex;
+      flex-direction: column;
+      gap: 24px;
+    }
+
+    .ficha {
+      overflow: hidden;
+      background: white;
+      border: 1px solid #d6e0da;
+      border-radius: 12px;
+      break-inside: avoid;
+    }
+
+    .encabezado {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      gap: 20px;
+      padding: 20px 24px;
+      background: #203f34;
+      color: white;
+    }
+
+    .encabezado h2 {
+      margin: 0 0 6px;
+      font-size: 24px;
+    }
+
+    .identificador {
+      font-size: 13px;
+      opacity: 0.85;
+    }
+
+    .estatus {
+      padding: 8px 12px;
+      border: 1px solid #8ca69a;
+      border-radius: 6px;
+      font-size: 13px;
+      white-space: nowrap;
+    }
+
+    .contenido {
+      padding: 24px;
+    }
+
+    .fechas {
+      display: grid;
+      grid-template-columns: repeat(4, 1fr);
+      gap: 12px;
+    }
+
+    .dato {
+      padding: 14px;
+      background: #f4f7f3;
+      border-radius: 6px;
+    }
+
+    .etiqueta {
+      display: block;
+      margin-bottom: 7px;
+      font-size: 12px;
+      color: #60756b;
+    }
+
+    .valor {
+      font-size: 15px;
+      font-weight: bold;
+    }
+
+    .observaciones {
+      margin: 22px 0;
+      padding-left: 14px;
+      border-left: 3px solid #367b5b;
+    }
+
+    .observaciones p {
+      margin: 0;
+      line-height: 1.5;
+      white-space: pre-wrap;
+    }
+
+    .titulo-movimientos {
+      display: flex;
+      justify-content: space-between;
+      flex-wrap: wrap;
+      gap: 10px;
+      margin-bottom: 12px;
+    }
+
+    .titulo-movimientos h3 {
+      margin: 0;
+      font-size: 16px;
+    }
+
+    .titulo-movimientos span {
+      font-size: 12px;
+      color: #60756b;
+    }
+
+    .tabla-contenedor {
+      overflow-x: auto;
+      border: 1px solid #d6e0da;
+      border-radius: 6px;
+    }
+
+    table {
+      width: 100%;
+      border-collapse: collapse;
+      font-size: 13px;
+    }
+
+    th,
+    td {
+      padding: 13px;
+      border-right: 1px solid #d6e0da;
+      border-bottom: 1px solid #d6e0da;
+      text-align: left;
+      vertical-align: top;
+      min-width: 150px;
+    }
+
+    th {
+      background: #edf3ed;
+    }
+
+    th small {
+      display: block;
+      margin-top: 6px;
+      color: #60756b;
+      font-weight: normal;
+    }
+
+    td:first-child {
+      background: #f8faf7;
+      font-weight: bold;
+    }
+
+    th:last-child,
+    td:last-child {
+      border-right: none;
+    }
+
+    tbody tr:last-child td {
+      border-bottom: none;
+    }
+
+    .fecha-movimiento {
+      display: block;
+      margin-bottom: 7px;
+      white-space: nowrap;
+    }
+
+    .fecha-movimiento:last-child {
+      margin-bottom: 0;
+    }
+
+    .sin-registro {
+      color: #9aa9a1;
+    }
+
+    .nota {
+      margin-top: 12px;
+      color: #60756b;
+      font-size: 11px;
+    }
+
+    @media (max-width: 700px) {
+      body {
+        padding: 12px;
+      }
+
+      .fechas {
+        grid-template-columns: repeat(2, 1fr);
+      }
+
+      .contenido,
+      .encabezado {
+        padding: 16px;
+      }
+    }
+
+    @media print {
+      body {
+        padding: 0;
+        background: white;
+      }
+
+      .herramientas,
+      #contador {
+        display: none;
+      }
+
+      .ficha {
+        border-radius: 0;
+      }
+
+      .tabla-contenedor {
+        overflow: visible;
+      }
+    }
+  </style>
 </head>
 
 <body>
+  <main>
+    <h1>Órdenes de producción</h1>
 
-<div class="card">
+    <div class="herramientas">
+      <input
+        type="file"
+        id="archivo"
+        accept=".csv,text/csv"
+        aria-label="Seleccionar archivo CSV"
+      >
 
-  <div class="header">
-    ORDEN DE PRODUCCIÓN: 4,236,875
-  </div>
+      <input
+        type="search"
+        id="buscar"
+        placeholder="Buscar por folio, ID o descripción..."
+        aria-label="Buscar órdenes"
+      >
 
-  <div class="info">
-    <div>
-      <div class="label">FOLIO</div>
-      <div class="value">OP-2026-001</div>
+      <button type="button" onclick="window.print()">
+        Imprimir
+      </button>
     </div>
 
-    <div>
-      <div class="label">FECHA</div>
-      <div class="value">2026-01-15</div>
+    <div id="contador" role="status">
+      Selecciona el CSV para mostrar las fichas.
     </div>
 
-    <div>
-      <div class="label">ESTATUS</div>
-      <div class="value">P</div>
-    </div>
+    <section id="fichas" aria-label="Fichas de producción"></section>
+  </main>
 
-    <div>
-      <div class="label">CENTRO</div>
-      <div class="value">Centro 01</div>
-    </div>
-  </div>
+  <script>
+    let ordenes = [];
 
-  <table>
-    <tr>
-      <th>ORIGEN</th>
-      <th>CENTRO</th>
-      <th>FECHA</th>
-    </tr>
+    const archivo = document.getElementById("archivo");
+    const buscar = document.getElementById("buscar");
+    const fichas = document.getElementById("fichas");
+    const contador = document.getElementById("contador");
 
-    <tr>
-      <td>Almacén Principal</td>
-      <td>Centro 01</td>
-      <td>2026-01-15</td>
-    </tr>
+    // Protege el HTML al mostrar textos provenientes de los datos.
+    function escapar(valor) {
+      const caracteres = {
+        "&": "&amp;",
+        "<": "&lt;",
+        ">": "&gt;",
+        '"': "&quot;",
+        "'": "&#39;"
+      };
 
-    <tr>
-      <td>Almacén Materia Prima</td>
-      <td>Centro 01</td>
-      <td>2026-01-16</td>
-    </tr>
-  </table>
+      return String(valor ?? "").replace(
+        /[&<>"']/g,
+        caracter => caracteres[caracter]
+      );
+    }
 
-</div>
+    function formatearFecha(valor) {
+      if (!valor) return "Sin fecha";
 
+      const coincidencia = String(valor).match(
+        /^(\d{4})-(\d{2})-(\d{2})/
+      );
+
+      if (!coincidencia) return escapar(valor);
+
+      const meses = [
+        "ene", "feb", "mar", "abr", "may", "jun",
+        "jul", "ago", "sep", "oct", "nov", "dic"
+      ];
+
+      const [, anio, mes, dia] = coincidencia;
+
+      return `${dia} ${meses[Number(mes) - 1]} ${anio}`;
+    }
+
+    // Lee CSV con comas, campos entre comillas y saltos de línea.
+    function leerCSV(texto) {
+      texto = texto.replace(/^\uFEFF/, "");
+
+      const filas = [];
+      let fila = [];
+      let campo = "";
+      let entreComillas = false;
+
+      for (let i = 0; i < texto.length; i++) {
+        const caracter = texto[i];
+
+        if (caracter === '"') {
+          if (entreComillas && texto[i + 1] === '"') {
+            campo += '"';
+            i++;
+          } else {
+            entreComillas = !entreComillas;
+          }
+        } else if (caracter === "," && !entreComillas) {
+          fila.push(campo);
+          campo = "";
+        } else if (
+          (caracter === "\n" || caracter === "\r") &&
+          !entreComillas
+        ) {
+          if (caracter === "\r" && texto[i + 1] === "\n") {
+            i++;
+          }
+
+          fila.push(campo);
+
+          if (fila.some(valor => valor.trim() !== "")) {
+            filas.push(fila);
+          }
+
+          fila = [];
+          campo = "";
+        } else {
+          campo += caracter;
+        }
+      }
+
+      if (entreComillas) {
+        throw new Error("El CSV tiene un campo con comillas sin cerrar.");
+      }
+
+      fila.push(campo);
+
+      if (fila.some(valor => valor.trim() !== "")) {
+        filas.push(fila);
+      }
+
+      if (!filas.length) return [];
+
+      const encabezados = filas.shift().map(valor => valor.trim());
+
+      const requeridos = [
+        "ORDEN_PROD_ID", "OP_FOLIO", "ORIGEN", "CENTRO",
+        "FECHA", "OP_FECHA", "OP_INICIO", "OP_FIN",
+        "OP_PROCESO", "OP_OBS", "OP_ESTATUS"
+      ];
+
+      const faltantes = requeridos.filter(
+        nombre => !encabezados.includes(nombre)
+      );
+
+      if (faltantes.length) {
+        throw new Error(
+          "Faltan columnas en el CSV: " + faltantes.join(", ")
+        );
+      }
+
+      return filas.map(valores =>
+        Object.fromEntries(
+          encabezados.map((nombre, indice) => [
+            nombre,
+            valores[indice] ?? ""
+          ])
+        )
+      );
+    }
+
+    // Agrupa los registros por ID: cada grupo genera una ficha.
+    // Esta función también puede recibir los datos de Aurora en JSON.
+    function cargarDatos(registros) {
+      const grupos = new Map();
+
+      registros.forEach(registro => {
+        const id = String(registro.ORDEN_PROD_ID ?? "").trim();
+
+        if (!id) return;
+
+        if (!grupos.has(id)) {
+          grupos.set(id, []);
+        }
+
+        grupos.get(id).push(registro);
+      });
+
+      ordenes = [...grupos.entries()].map(([id, movimientos]) => ({
+        id,
+        cabecera: movimientos[0],
+        movimientos
+      }));
+
+      ordenes.sort((a, b) =>
+        String(b.cabecera.OP_FOLIO).localeCompare(
+          String(a.cabecera.OP_FOLIO),
+          "es",
+          { numeric: true }
+        )
+      );
+
+      mostrarFichas();
+    }
+
+    function generarFicha(orden) {
+      const datos = orden.cabecera;
+      const movimientos = orden.movimientos;
+
+      const centros = [...new Set(
+        movimientos.map(registro => registro.CENTRO)
+      )];
+
+      const origenes = [...new Set(
+        movimientos.map(registro => registro.ORIGEN)
+      )];
+
+      const fechas = [
+        ["Fecha de la orden", datos.OP_FECHA],
+        ["Inicio", datos.OP_INICIO],
+        ["Fin", datos.OP_FIN],
+        ["Fecha de proceso", datos.OP_PROCESO]
+      ];
+
+      const encabezados = centros.map(centro => `
+        <th scope="col">
+          ${escapar(centro || "Sin centro")}
+          <small>Fecha</small>
+        </th>
+      `).join("");
+
+      const filas = origenes.map(origen => {
+        const celdas = centros.map(centro => {
+          const registros = movimientos
+            .filter(registro =>
+              registro.ORIGEN === origen &&
+              registro.CENTRO === centro
+            )
+            .sort((a, b) =>
+              String(a.FECHA).localeCompare(String(b.FECHA))
+            );
+
+          const contenido = registros.length
+            ? registros.map(registro => `
+                <span class="fecha-movimiento">
+                  ${formatearFecha(registro.FECHA)}
+                </span>
+              `).join("")
+            : '<span class="sin-registro">—</span>';
+
+          return `<td>${contenido}</td>`;
+        }).join("");
+
+        return `
+          <tr>
+            <td>${escapar(origen || "Sin origen")}</td>
+            ${celdas}
+          </tr>
+        `;
+      }).join("");
+
+      return `
+        <article class="ficha">
+          <div class="encabezado">
+            <div>
+              <h2>OP ${escapar(datos.OP_FOLIO)}</h2>
+              <div class="identificador">
+                Orden de producción ID: ${escapar(orden.id)}
+              </div>
+            </div>
+
+            <div class="estatus">
+              Estatus: ${escapar(datos.OP_ESTATUS || "Sin dato")}
+            </div>
+          </div>
+
+          <div class="contenido">
+            <div class="fechas">
+              ${fechas.map(([etiqueta, valor]) => `
+                <div class="dato">
+                  <span class="etiqueta">${etiqueta}</span>
+                  <span class="valor">
+                    ${formatearFecha(valor)}
+                  </span>
+                </div>
+              `).join("")}
+            </div>
+
+            <div class="observaciones">
+              <span class="etiqueta">Observaciones</span>
+              <p>${escapar(datos.OP_OBS || "Sin observaciones")}</p>
+            </div>
+
+            <div class="titulo-movimientos">
+              <h3>Movimientos por origen y centro</h3>
+              <span>
+                ${movimientos.length} registros ·
+                ${centros.length} centros
+              </span>
+            </div>
+
+            <div class="tabla-contenedor">
+              <table>
+                <thead>
+                  <tr>
+                    <th scope="col">Origen</th>
+                    ${encabezados}
+                  </tr>
+                </thead>
+                <tbody>
+                  ${filas}
+                </tbody>
+              </table>
+            </div>
+
+            <div class="nota">
+              Se conservan todas las fechas de los registros.
+              — indica que no existe un registro para esa combinación.
+            </div>
+          </div>
+        </article>
+      `;
+    }
+
+    function mostrarFichas() {
+      const texto = buscar.value.trim().toLocaleLowerCase("es");
+
+      const visibles = ordenes.filter(orden => {
+        const datos = orden.cabecera;
+
+        return [
+          orden.id,
+          datos.OP_FOLIO,
+          datos.OP_OBS
+        ].join(" ").toLocaleLowerCase("es").includes(texto);
+      });
+
+      contador.textContent =
+        `${visibles.length} de ${ordenes.length} fichas`;
+
+      fichas.innerHTML = visibles.length
+        ? visibles.map(generarFicha).join("")
+        : "<p>No se encontraron órdenes.</p>";
+    }
+
+    archivo.addEventListener("change", async evento => {
+      const seleccionado = evento.target.files[0];
+
+      if (!seleccionado) return;
+
+      try {
+        const texto = await seleccionado.text();
+        cargarDatos(leerCSV(texto));
+      } catch (error) {
+        contador.textContent = error.message;
+      }
+    });
+
+    buscar.addEventListener("input", mostrarFichas);
+  </script>
 </body>
 </html>
